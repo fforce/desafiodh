@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <title>PRESTAMOS.COM</title>
+    <meta charset="utf-8" />
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+
+    <style>
+        h1,
+        h2 {
+            color:#00008B;
+        }
+
+        .btnColor{
+            background-color:blue;
+            color : white;
+        }
+
+        .active{
+            background-color: blue !important;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <container>
+            <h1>PRESTAMOS.COM</h1>
+            <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00008B">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#">INICIO</a>
+                        <a class="nav-item nav-link active" href="#">CALCULO DE PRESTAMOS
+                            <span class="sr-only">(current)</span>
+                        </a>
+
+                    </div>
+                </div>
+            </nav>
+            <div class="col-md-12">
+                <BR>
+                <h2>Cálculo de prestamos</h2>                
+                <p>
+                    Cálculo de prestamos - Para el cálculo de prestamos, esta calculadora le permite calcular la cuota mensual a pagar en su
+                    préstamo, asi como el total de intereses.
+                </p>
+            </div>
+        </container>
+    </header>
+
+    <div class "container">
+        <div class="col-md-12">
+            <p>
+                Cálculo de prestamos - Para el cálculo de prestamos, esta calculadora le permite calcular la cuota mensual a pagar en su
+                préstamo, asi como el total de intereses.
+            </p>
+
+        </div>
+        <div class="col-md-8">
+            <form>
+                <div class="form-group row">
+                    <label for="importe" class="col-sm-2 col-form-label">Importe</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control clean" id="importe">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="provincia" class="col-sm-2 col-form-label">Provincia</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="cbo-provincia">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="taza" class="col-sm-2 col-form-label">Taza de interes</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control clean" id="taza">
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <button type="button" class="btn btnColor" id="btnCalcular">CALCULAR</button>
+                    <button type="button" class="btn btnColor" id="btnBorrar">BORRAR</button>
+                </div>
+                <div class="form-group row">
+                    <label for="cuotaMensual" class="col-sm-2 col-form-label">Cuota mensual</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control clean" id="cuotaMensual" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="totalAPagar" class="col-sm-2 col-form-label">Total a pagar </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control clean" id="totalAPagar" readonly>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <footer>
+    </footer>
+</body>
+
+</html>
+
+<script>
+
+    ////aca utilize jquery pero se podria utilizar el onload del body lo mismo con los botones onClick="function()"
+    $(document).ready(function () {
+
+        calculoTaza.loadCboProvincias();
+
+        $('#btnBorrar').click(function () {
+            calculoTaza.cleanForm();
+        })
+
+        $('#btnCalcular').click(function () {
+            calculoTaza.calcular();
+        })
+
+
+    })
+
+    var calculoTaza = {
+
+        loadCboProvincias: function () {
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", 'https://raw.githubusercontent.com/dariosus/jsonProvincias/master/provincias.json', true);
+            ajax.send();
+            ajax.onreadystatechange = function () {
+
+                if (ajax.readyState == 4 && ajax.status == 200) {
+
+                    var data = ajax.responseText;
+                    var items = JSON.parse(data);
+                    var dropDown = document.getElementById('cbo-provincia');
+
+                    //////////////una forma es usando for o con jquery no me queda claro q se puede o no usar
+                    /*    
+                    for (var i = 0; i < items.length; i++) {
+                        var option = document.createElement('option');
+                        option.text = items[i].state;
+                        option.value = i;
+                        dropDown.add(option);
+                    }*/
+
+                    items.map(function (val) {
+                        var option = document.createElement('option');
+                        option.text = val.state;
+                        option.value = val.state;
+                        dropDown.add(option);
+                    })
+
+                }
+            }
+
+        },
+        cleanForm: function () {
+            var textbox = document.getElementsByClassName('clean');
+
+            for (i = 0; i < textbox.length; i++) {
+                textbox[i].value = '';
+            }
+            var ddProvincias = document.getElementById('cbo-provincia').selectedIndex = 0;
+
+        },
+        calcular: function () {
+            var importe = document.getElementById('importe').value;
+            var taza = document.getElementById('taza').value;
+
+            if (!isNaN(importe)) {
+                importe = parseInt(importe);
+            } else {
+                alert("importe no es un número");
+                return;
+            }
+
+            if (!isNaN(taza)) {
+                taza = parseInt(taza);
+            } else {
+                alert("taza no es un número");
+                return;
+            }
+
+            var total = (importe * taza) / 100 + importe;
+            var valorCuota = total / 12;
+
+            document.getElementById('cuotaMensual').value = valorCuota;
+            document.getElementById('totalAPagar').value = total;
+        }
+    }
+
+</script>
