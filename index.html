@@ -15,22 +15,22 @@
     <style>
         h1,
         h2 {
-            color:#00008B;
+            color: #00008B;
         }
 
-        .btnColor{
-            background-color:blue;
-            color : white;
+        .btnColor {
+            background-color: blue;
+            color: white;
         }
 
-        .active{
+        .active {
             background-color: blue !important;
         }
     </style>
 
 </head>
 
-<body>
+<body onload="loadFunction()">
     <header>
         <container>
             <h1>PRESTAMOS.COM</h1>
@@ -51,7 +51,7 @@
             </nav>
             <div class="col-md-12">
                 <BR>
-                <h2>Cálculo de prestamos</h2>                
+                <h2>Cálculo de prestamos</h2>
                 <p>
                     Cálculo de prestamos - Para el cálculo de prestamos, esta calculadora le permite calcular la cuota mensual a pagar en su
                     préstamo, asi como el total de intereses.
@@ -90,8 +90,8 @@
                     </div>
                 </div>
                 <div class="col-md-12 form-group">
-                    <button type="button" class="btn btnColor" id="btnCalcular">CALCULAR</button>
-                    <button type="button" class="btn btnColor" id="btnBorrar">BORRAR</button>
+                    <button type="button" class="btn btnColor" id="btnCalcular" onclick="btnCalcularOnClick()">CALCULAR</button>
+                    <button type="button" class="btn btnColor" id="btnBorrar" onclick="btnBorrarOnClick()">BORRAR</button>
                 </div>
                 <div class="form-group row">
                     <label for="cuotaMensual" class="col-sm-2 col-form-label">Cuota mensual</label>
@@ -117,21 +117,17 @@
 
 <script>
 
-    ////aca utilize jquery pero se podria utilizar el onload del body lo mismo con los botones onClick="function()"
-    $(document).ready(function () {
+    function loadFunction() {
+        calculoTaza.loadCboProvincias();      
+    }
 
-        calculoTaza.loadCboProvincias();
+    function btnBorrarOnClick(){
+        calculoTaza.cleanForm();
+    }
 
-        $('#btnBorrar').click(function () {
-            calculoTaza.cleanForm();
-        })
-
-        $('#btnCalcular').click(function () {
-            calculoTaza.calcular();
-        })
-
-
-    })
+    function btnCalcularOnClick(){
+        calculoTaza.calcular();
+    }
 
     var calculoTaza = {
 
